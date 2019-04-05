@@ -3,7 +3,7 @@
 
 # include <stdlib.h>
 
-# define PERCENT_CHANCE_FAIL	30
+# define PERCENT_CHANCE_FAIL	10
 # define CUSTOM_SEED			0
 
 void	*malloc_null(size_t size);
