@@ -20,6 +20,14 @@ function add_include_c_files
 	echo "#include \"$PWD/alloc_null.h\"" | cat - "$baseAllocFile" > "$tmpfileName" && mv "$tmpfileName" "$realAllocFile"
 }
 
+function cp_alloc_null_c_everywhere
+{
+	find "$internalProjectDir" -type d -print0 |
+	while IFS= read -r -d $'\0' thisDir; do
+		cp "$realAllocFile" "$thisDir/"
+	done
+}
+
 for param in "$@"; do
 	if [[ -z "$externalProjectDir" ]]; then
 		externalProjectDir="$param"
@@ -36,6 +44,7 @@ else
 	rm -rf "$internalProjectDir"
 	cp -R "$externalProjectDir" "$internalProjectDir"
 	add_include_c_files
+	cp_alloc_null_c_everywhere
 	echo "Pour terminer l'initialisation vous devez ajouter $realAllocFile a TOUS les Makefiles."
 	exit 0
 fi
