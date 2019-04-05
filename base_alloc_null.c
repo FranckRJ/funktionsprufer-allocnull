@@ -2,7 +2,6 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <time.h>
-#include "alloc_null.h"
 
 void	*malloc_null(size_t size)
 {
