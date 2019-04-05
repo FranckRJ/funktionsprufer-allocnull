@@ -55,6 +55,6 @@ else
 	add_include_c_files
 	cp_alloc_null_c_everywhere
 	add_alloc_null_to_makefile
-	echo "Pour terminer l'initialisation vous devez ajouter $realAllocFile a TOUS les Makefiles."
+	echo "Vous pouvez compiler le projet (dossier ${internalProjectDir}) et le lancer, il utilisera le malloc custom."
 	exit 0
 fi
