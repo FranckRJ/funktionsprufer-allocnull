@@ -9,6 +9,32 @@ tmpfileName='tmpfile.txt'
 baseAllocFile='base_alloc_null.c'
 realAllocFile='alloc_null.c'
 
+function print_help
+{
+read -r -d '' HELP_TEXT << EOM
+DESCRIPTION :
+./init_alloc.sh <chemin_vers_projet>
+
+Copie l'integralite du projet dans le dossier « $internalProjectDir » en remplacant tous les malloc
+par une version custom qui peut retourner NULL. Tous les Makefiles seront modifies pour ajouter
+les fichiers necessaires, si une erreur se produit durant la compilation veuillez corriger
+les Makefiles en ajoutant manuellement le fichier « $realAllocFile » dans les dependances.
+
+Lors de l'execution du programme le seed utilise sera affiche sur la sortie d'erreur lors du
+premier malloc.
+
+Pour configurer le malloc_null modifiez les defines du fichier alloc_null.h, une recompilation
+complete du projet est necessaire pour toutes modifications du fichier.
+
+LISTE DES DEFINES CONFIGURABLES :
+PERCENT_CHANCE_FAIL     Le pourcentage de chance qu'un malloc a de rater.
+CUSTOM_SEED             Le seed a utiliser pour la generation de nombre aleatoire, si 0 il vaudra
+                        le retour de la fonction « time(NULL) ».
+EOM
+
+echo "$HELP_TEXT"
+}
+
 function add_include_c_files
 {
 	find "$internalProjectDir" -name "*.c" -print0 |
@@ -38,7 +64,10 @@ function add_alloc_null_to_makefile
 }
 
 for param in "$@"; do
-	if [[ -z "$externalProjectDir" ]]; then
+	if [[ "$param" =~ ^-.* ]]; then
+		print_help
+		exit 0
+	elif [[ -z "$externalProjectDir" ]]; then
 		externalProjectDir="$param"
 	else
 		echo "Trop d'arguments, le chemin du projet ne peut etre initialise qu'une fois."
